@@ -13,7 +13,7 @@ int main()
     int br2 = 0, br5 = 0, br3 = 0, br6 = 0, br4 = 0, rbr2 = 0, rbr3 = 0, rbr4 = 0, rbr5 = 0, rbr6 = 0;
     int pk, pkr, hit = 0, smjer;  //smjer -> 1 (okomito) , 2 (vodoravno)
 
-    char robovis[12][12], playevis[12][12] = { 0 };
+    char robovis[12][12], playervis[12][12] = { 0 };
     // 4(*1),3/6(*2),2/5(*2) brodovi
     srand(time(0));
 
@@ -37,22 +37,22 @@ int main()
                 switch (player[i][j])
                 {
                 case 2:
-                    playevis[i][j] = '2';
+                    playervis[i][j] = '2';
                     break;
                 case 3:
-                    playevis[i][j] = '3';
+                    playervis[i][j] = '3';
                     break;
                 case 4:
-                    playevis[i][j] = '4';
+                    playervis[i][j] = '4';
                     break;
                 case 5:
-                    playevis[i][j] = '2';
+                    playervis[i][j] = '2';
                     break;
                 case 6:
-                    playevis[i][j] = '3';
+                    playervis[i][j] = '3';
                     break;
                 default:
-                    playevis[i][j] = '0';
+                    playervis[i][j] = '0';
                 }
             }
         }
@@ -75,7 +75,7 @@ int main()
                 else if (j == 0 && i == 0)
                     cout << 0 << " ";
                 else
-                    cout << playevis[i][j] << " ";
+                    cout << playervis[i][j] << " ";
             }
             cout << endl;
         }
@@ -287,33 +287,33 @@ int main()
             switch (player[i][j])
             {
             case 2:
-                playevis[i][j] = '2';
+                playervis[i][j] = '2';
                 break;
             case 3:
-                playevis[i][j] = '3';
+                playervis[i][j] = '3';
                 break;
             case 4:
-                playevis[i][j] = '4';
+                playervis[i][j] = '4';
                 break;
             case 5:
-                playevis[i][j] = '2';
+                playervis[i][j] = '2';
                 break;
             case 6:
-                playevis[i][j] = '3';
+                playervis[i][j] = '3';
                 break;
             default:
-                playevis[i][j] = '0';
+                playervis[i][j] = '0';
             }
         }
     }
 
-    // robot setup
+ // robot setup
     for (int i = 0; i < 5;)
     {
         r = rand() % 4 + 2; // random.c od Damijanic
         smjer = rand() % 2 + 1;
 
-        //okomito
+ //okomito
         if (smjer == 1)
         {
             switch (r)
@@ -392,6 +392,327 @@ int main()
             }
         }
 
+
+ //vodoravno
+        if (smjer == 2)
+        {
+            switch (r)
+            {
+            case 4:
+                if (rflagd == 0)
+                {
+                    x = rand() % 10 + 1;
+                    y = rand() % 7 + 1;
+                    if (robot[x][y] == 0 && robot[x][y + 1] == 0 && robot[x][y + 2] == 0 && robot[x][y + 3] == 0)
+                    {
+                        robot[x][y] = 4;
+                        robot[x][y + 1] = 4;
+                        robot[x][y + 2] = 4;
+                        robot[x][y + 3] = 4;
+                        rflagd++;
+                        i++;
+                    }
+                }
+                break;
+            case 3:
+                if (rflagc == 0)
+                {
+                    x = rand() % 10 + 1;
+                    y = rand() % 8 + 1;
+                    if (robot[x][y] == 0 && robot[x][y + 1] == 0 && robot[x][y + 2] == 0)
+                    {
+                        robot[x][y] = 3;
+                        robot[x][y + 1] = 3;
+                        robot[x][y + 2] = 3;
+                        rflagc++;
+                        i++;
+                    }
+                }
+                else if (rflagc == 1)
+                {
+                    x = rand() % 10 + 1;
+                    y = rand() % 8 + 1;
+                    if (robot[x][y] == 0 && robot[x][y + 1] == 0 && robot[x][y + 2] == 0)
+                    {
+                        robot[x][y] = 6;
+                        robot[x][y + 1] = 6;
+                        robot[x][y + 2] = 6;
+                        rflagc++;
+                        i++;
+                    }
+                }
+                break;
+            case 2:
+                if (rflagb == 0)
+                {
+                    x = rand() % 10 + 1;
+                    y = rand() % 9 + 1;
+                    if (robot[x][y] == 0 && robot[x][y + 1] == 0)
+                    {
+                        robot[x][y] = 2;
+                        robot[x][y + 1] = 2;
+                        rflagb++;
+                        i++;
+                    }
+                    break;
+                }
+                else if (rflagb == 1)
+                {
+                    x = rand() % 10 + 1;
+                    y = rand() % 9 + 1;
+                    if (robot[x][y] == 0 && robot[x][y + 1] == 0)
+                    {
+                        robot[x][y] = 5;
+                        robot[x][y + 1] = 5;
+                        rflagb++;
+                        i++;
+                    }
+                }
+            }
+        }
     }
+ 
+ //pocetni screen
+    system("cls");
+
+ //robot
+    for (int i = 0; i < 11; i++)
+    {
+        for (int j = 0; j < 11; j++)
+        {
+            if (i == 0)
+                cout << j << " ";
+            else if (j == 0)
+                cout << " " << i << " ";
+            else if (j == 0 && i == 0)
+                cout << 0 << " ";
+            else
+                cout << robovis[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << "\n-\n\n";
+
+ //player
+    for (int i = 0; i < 11; i++)
+    {
+        for (int j = 0; j < 11; j++)
+        {
+            if (i == 0)
+                cout << j << " ";
+            else if (j == 0)
+                cout << " " << i << " ";
+            else if (j == 0 && i == 0)
+                cout << 0 << " ";
+            else
+                cout << playervis[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+ //game
+    while ((rbrod > 0) || (brod > 0)) {
+
+     //player turn
+        for (int i = 0; i == 0;)
+        {
+            cout << "Odaberi gdje cete pogoditi:" << endl;
+            cin >> x >> y;
+            if (check[x][y] == 0)
+            {
+                check[x][y] = 1;
+                if (robot[x][y] != 0)
+                {
+                    switch (robot[x][y])
+                    {
+                    case 2:
+                        robovis[x][y] = 'X';
+                        br2++;
+                        break;
+                    case 3:
+                        robovis[x][y] = 'X';
+                        br3++;
+                        break;
+                    case 4:
+                        robovis[x][y] = 'X';
+                        br4++;
+                        break;
+                    case 5:
+                        robovis[x][y] = 'X';
+                        br5++;
+                        break;
+                    case 6:
+                        robovis[x][y] = 'X';
+                        br6++;
+                        break;
+                    }
+                }
+                else
+                {
+                    robovis[x][y] = '*';
+                    i++;
+                }
+
+            }
+            else
+                cout<<"vec ste tu pogodili."<<endl;
+        }
+
+
+     //robot turn
+        for (int i = 0; i == 0;)
+        {
+            x = rand() % 10 + 1;
+            y = rand() % 10 + 1;
+            if (rcheck[x][y] == 0)
+            {
+                rcheck[x][y] = 1;
+                if (player[x][y] != 0)
+                {
+                    switch (player[x][y])
+                    {
+                    case 2:
+                        playervis[x][y] = 'X';
+                        rbr2++;
+                        break;
+                    case 3:
+                        playervis[x][y] = 'X';
+                        rbr3++;
+                        break;
+                    case 4:
+                        playervis[x][y] = 'X';
+                        rbr4++;
+                        break;
+                    case 5:
+                        playervis[x][y] = 'X';
+                        rbr5++;
+                        break;
+                    case 6:
+                        playervis[x][y] = 'X';
+                        rbr6++;
+                        break;
+                    }
+                }
+                else
+                {
+                    playervis[x][y] = '*';
+                    i++;
+                }
+            }
+        }
+
+
+        system("cls");
+
+     //robot tablica
+        for (int i = 0; i < 11; i++)
+        {
+            for (int j = 0; j < 11; j++)
+            {
+                if (i == 0)
+                    cout << j << " ";
+                else if (j == 0)
+                    cout << i << " ";
+                else if (j == 0 && i == 0)
+                    cout << 0 << " ";
+                else
+                    cout << robovis[i][j] << " ";
+            }
+            cout << endl;
+        }
+
+        cout << "\n-\n\n";
+
+     //player tablica    
+        for (int i = 0; i < 11; i++)
+        {
+            for (int j = 0; j < 11; j++)
+            {
+                if (i == 0)
+                    cout << j << " ";
+                else if (j == 0)
+                    cout << " " << i << " ";
+                else if (j == 0 && i == 0)
+                    cout << 0 << " ";
+                else
+                    cout << playervis[i][j];
+            }
+            cout << endl;
+        }
+
+        cout << endl;
+
+    //robot brod potpljen?
+    if (br2 == 2)
+    {
+        cout << "Brod 2 je potopljen" << endl;
+        br2++;
+        rbrod--;
+    }
+    else if (br3 == 3)
+    {
+        cout << "Brod 3 je potopljen" << endl ;
+        br3++;
+        rbrod--;
+    }
+    else if (br4 == 4)
+    {
+        cout << "Brod 4 je potopljen" << endl;
+        br4++;
+        rbrod--;
+    }
+    else if (br5 == 2)
+    {
+        cout << "Brod 2 je potopljen" << endl;
+        br5++;
+        rbrod--;
+    }
+    else if (br6 == 3)
+    {
+        cout << "Brod 3 je potopljen";
+        br6++;
+        rbrod--;
+    }
+
+ //player brod potopljen?
+    if (rbr2 == 2)
+    {
+        cout << "Vas Brod 2 je potopljen" << endl;
+        rbr2++;
+        brod--;
+    }
+    if (rbr3 == 3)
+    {
+        cout << "Vas Brod 3 je potopljen" << endl;
+        rbr3++;
+        brod--;
+    }
+    if (rbr4 == 4)
+    {
+        cout << "Vas Brod 4 je potopljen" << endl;
+        rbr4++;
+        brod--;
+    }
+    if (rbr5 == 2)
+    {
+        cout << "Brod 2 playera  je potopljen" << endl;
+        rbr5++;
+        brod--;
+    }
+    if (rbr6 == 3)
+    {
+        cout << "Brod 3 playera  je potopljen" << endl;
+        rbr6++;
+        brod--;
+    }
+
+  } 
+
+  system("cls");
+  if (rbrod <= 0)
+      cout << "Vi ste pobjedili :D";
+  if (brod <= 0)
+      cout << "Izgubili ste >:)";
+  return 0;
 }
 
