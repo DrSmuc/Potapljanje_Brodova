@@ -7,7 +7,7 @@ int main()
 {
     //deklaracije
     int player[12][12] = { 0 }, robot[12][12] = { 0 }, x, y, flagd = 0, flagc = 0, flagb = 0, rflagd = 0, rflagc = 0, rflagb = 0, rbrod = 5;
-    int brod = 5, r, br = 1, br1 = 1, check[12][12] = { 0 }, rcheck[12][12] = { 0 };
+    int brod = 5, r, br = 1, br1 = 1, check[12][12] = { 0 }, rcheck[12][12] = { 0 },option=4;
 
     //brojaci brodova
     int br2 = 0, br5 = 0, br3 = 0, br6 = 0, br4 = 0, rbr2 = 0, rbr3 = 0, rbr4 = 0, rbr5 = 0, rbr6 = 0;
@@ -17,19 +17,61 @@ int main()
     // 4(*1),3/6(*2),2/5(*2) brodovi
     srand(time(0));
 
+    //datoteke
+    fstream playerBrod;
+    fstream robotBrod;
+    fstream pogodak;
+    fstream potopljeno;
+
     cout << "Imena brodova su 4(zauzima 4 polja), 3(zauzima 3 polja), 2(zauzima 2 polje), dva puta birate brodove 3 i 2." << endl << endl;
 
     //robot visual setup
     for (int i = 0; i < 12; i++)
         for (int j = 0; j < 12; j++)
             robovis[i][j] = '0';
+    //start menu
+    cout << "Sto zelite napraviti?\n\n\n" << "Start new game(0)" << endl << "Continue game(1)" << endl << "Exit(2)" << endl;
+    cin >> option;
+    switch (option)
+    {
+    case 0:
+        playerBrod.open("player_brod.txt", ios::out|ios::app);
+        playerBrod << " ";
+        for (int i = 0; i < 11; i++)
+        {
+            for (int j = 0; j < 11; j++)
+            {
+                if (i == 0)
+                    playerBrod << j << " ";
+                else if (j == 0)
+                {
+                    if (i < 10)
+                        playerBrod << " " << i << " ";
+                    else
+                        playerBrod << i << " ";
+                }
+                else if (j == 0 && i == 0)
+                    playerBrod << 0 << " ";
+                else
+                    playerBrod << playervis[i][j] << " ";
+            }
+            playerBrod << endl;
+        }
+        playerBrod.close();
+        break;
+    }
+
 
     //player setup
-    for (int i = 0; i < 5;)
+    if(option==0)
+    { 
+    for (int i=0; i < 5;)
     {
+ 
         system("cls");
 
         //player vis setup
+        playerBrod.open("player.brod", ios::in);
         for (int i = 0; i < 12; i++)
         {
             for (int j = 0; j < 12; j++)
@@ -56,8 +98,10 @@ int main()
                 }
             }
         }
+        playerBrod.close();
 
         //player
+        playerBrod.open("player.brod", ios::out|ios::app);
         cout << " ";
         for (int i = 0; i < 11; i++)
         {
@@ -181,7 +225,7 @@ int main()
             }
         }
 
-
+ 
         //vodoravno
         if (smjer == 2)
         {
@@ -278,8 +322,10 @@ int main()
             }
         }
     }
+    playerBrod.close();
 
     //player vis setup
+    playerBrod.open("player.brod", ios::in);
     for (int i = 0; i < 12; i++)
     {
         for (int j = 0; j < 12; j++)
@@ -306,6 +352,8 @@ int main()
             }
         }
     }
+    playerBrod.close();
+
 
  // robot setup
     for (int i = 0; i < 5;)
@@ -714,5 +762,6 @@ int main()
   if (brod <= 0)
       cout << "Izgubili ste >:)";
   return 0;
+  }
 }
 
