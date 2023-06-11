@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <algorithm>
 using namespace std;
 
 
@@ -9,12 +11,12 @@ bool check1(int x, int y, int smjer, int ch)
     switch (ch)
     {
     case 2:
-        if ((x < 10 && smjer != 2) || (y < 10 && smjer != 1))
+        if ((x < 10 && smjer != 2 && x>0) || (y < 10 && smjer != 1 && y>0))
             return 1; break;
     case 3:
-        if ((x < 9 && smjer != 2) || (y < 9 && smjer != 1)) return 1;             break;
+        if ((x < 9 && smjer != 2 && x>0) || (y < 9 && smjer != 1 && y>0)) return 1;             break;
     case 4:
-        if ((x < 8 && smjer != 2) || (y < 8 && smjer != 1)) return 1;
+        if ((x < 8 && smjer != 2 && x>0) || (y < 8 && smjer != 1 && y>0)) return 1;
     }
     return 0;
 }
@@ -31,7 +33,7 @@ int main()
     //brojaci brodova
     int br2 = 0, br5 = 0, br3 = 0, br6 = 0, br4 = 0, rbr2 = 0, rbr3 = 0, rbr4 = 0, rbr5 = 0, rbr6 = 0;
     int ch = 0;   //koji brod?
-    int pk, pkr, hit = 0, smjer;  //smjer -> 1 (okomito) , 2 (vodoravno)
+    int pk, pkr, hit = 0, counter = 0, smjer, sm;  //smjer -> 1 (okomito) , 2 (vodoravno)
 
     char robovis[12][12];
     char playervis[12][12] = { 0 };
@@ -39,13 +41,22 @@ int main()
     // 4(*1),3/6(*2),2/5(*2) brodovi
     srand(time(0));
 
+    // strukturno polje za zapis usera,pobjeda i gubitka
+
+    //-> dodat ako se da
+
+    //struct info
+    //{
+    //  char user
+    //}
+
     //datoteke
     fstream playerBrod;
     fstream robotBrod;
-    fstream Ppogodak;
-    fstream Rpogodak;
-    fstream Ppotopljeno;  //BINARNO
-    fstream Rpotopljeno;  //BINARNO
+    fstream Ppogodak; //BINARNO
+    fstream Rpogodak; //BINARNO
+
+    //fstream User;  
 
 
     cout << "Imena brodova su 4(zauzima 4 polja), 3(zauzima 3 polja), 2(zauzima 2 polje), dva puta     birate brodove 3 i 2." << endl;
@@ -57,7 +68,8 @@ int main()
         for (int j = 0; j < 12; j++)
             robovis[i][j] = '0';
     //start menu
-    cout << "Sto zelite napraviti?\n\n\n" << "Start new game(0)" << endl << "Continue game(1)" << endl << "Exit(2)" << endl;
+
+    cout << "Dobro dosli u POTAPANJE BRODOVA\n" << "Sto zelite napraviti?\n\n\n" << "Start new game(0)" << endl << "Continue game(1)" << endl << "Exit(2)" << endl;
     cin >> option;
     switch (option)
     {
@@ -667,15 +679,15 @@ int main()
 
     if (option == 1)
     {
-        Ppogodak.open("Ppogodak.txt", ios::in);
+        Ppogodak.open("Ppogodak.bin", ios::binary | ios::in);
         for (int i = 0; i < 11; i++)
             for (int j = 0; j < 11; j++)
-                Ppogodak >> check[i][j];
+                Ppogodak.read((char*)&check[i][j], sizeof(1));
         Ppogodak.close();
-        Rpogodak.open("Rpogodak.txt", ios::in);
+        Rpogodak.open("Rpogodak.bin", ios::binary | ios::in);
         for (int i = 0; i < 11; i++)
             for (int j = 0; j < 11; j++)
-                Rpogodak >> rcheck[i][j];
+                Rpogodak.read((char*)&rcheck[i][j], sizeof(1));
         Rpogodak.close();
         //checjk ateup2
         for (int i = 0; i < 11; i++)
@@ -713,27 +725,64 @@ int main()
                         robovis[i][j] = '*';
                     }
                 }
+
+
+        for (int i = 0; i < 11; i++)
+            for (int j = 0; j < 11; j++)
+                if (rcheck[i][j] == 1)
+                {
+                    if (player[i][j] != 0)
+                    {
+                        switch (player[i][j])
+                        {
+                        case 2:
+                            playervis[i][j] = 'X';
+                            rbr2++;
+                            break;
+                        case 3:
+                            playervis[i][j] = 'X';
+                            rbr3++;
+                            break;
+                        case 4:
+                            playervis[i][j] = 'X';
+                            rbr4++;
+                            break;
+                        case 5:
+                            playervis[i][j] = 'X';
+                            rbr5++;
+                            break;
+                        case 6:
+                            playervis[i][j] = 'X';
+                            rbr6++;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        playervis[i][j] = '*';
+                    }
+                }
     }
 
 
-    if (option == 1)
-    {
-        Rpotopljeno.open("Rpotopljeno.txt", ios::in);
-        Ppotopljeno.open("Ppotopljeno.txt", ios::in);
-        Ppotopljeno >> br2;
-        Ppotopljeno >> br3;
-        Ppotopljeno >> br4;
-        Ppotopljeno >> br5;
-        Ppotopljeno >> br6;
-        Rpotopljeno >> rbr2;
-        Rpotopljeno >> rbr3;
-        Rpotopljeno >> rbr4;
-        Rpotopljeno.close();
-        Ppotopljeno.close();
-    }
+    //if(option==1)
+    //{
+    //  Rpotopljeno.open("Rpotopljeno.txt", ios::in);
+    //  Ppotopljeno.open("Ppotopljeno.txt", ios::in);
+    //  Ppotopljeno>>br2;
+    //  Ppotopljeno>>br3;
+    //  Ppotopljeno>>br4;
+    //  Ppotopljeno>>br5;
+    //  Ppotopljeno>>br6;
+    //  Rpotopljeno>>rbr2;
+    //  Rpotopljeno>>rbr3;
+    //  Rpotopljeno>>rbr4;
+    //  Rpotopljeno.close();
+    //  Ppotopljeno.close();
+    //}
 
 
-    //pocetni screen
+   //pocetni screen
     system("cls");
 
 
@@ -744,7 +793,7 @@ int main()
     while ((rbrod > 0) || (brod > 0)) {
 
         //player turn
-        for (int i = 0; i == 0;)
+        for (int k = 0; k == 0;)
         {
 
             //robot
@@ -812,63 +861,75 @@ int main()
                         br2++;
                         if (br2 == 2)
                         {
-                            cout << "Brod 2 je potopljen" << endl;
+                            system("cls");
+                            cout << "Brod 12 je potopljen" << endl;
                             br2++;
                             rbrod--;
                         }
-                        system("cls");
                         break;
                     case 3:
                         robovis[x][y] = 'X';
                         br3++;
                         if (br3 == 3)
                         {
+                            system("cls");
                             cout << "Brod 3 je potopljen" << endl;
                             br3++;
                             rbrod--;
                         }
-                        system("cls");
+
                         break;
                     case 4:
                         robovis[x][y] = 'X';
                         br4++;
                         if (br4 == 4)
                         {
+                            system("cls");
                             br4++;
                             cout << "Brod 4 je potopljen" << endl;
                             rbrod--;
                         }
-                        system("cls");
+
                         break;
                     case 5:
                         robovis[x][y] = 'X';
                         br5++;
                         if (br5 == 2)
                         {
+                            system("cls");
                             br5++;
                             cout << "Brod 2 je potopljen" << endl;
                             rbrod--;
                         }
-                        system("cls");
+
                         break;
                     case 6:
                         robovis[x][y] = 'X';
                         br6++;
                         if (br6 == 3)
                         {
+                            system("cls");
                             cout << "Brod 3 je potopljen" << endl;
                             br6++;
                             rbrod--;
                         }
-                        system("cls");
+
                         break;
                     }
                 }
                 else
                 {
                     robovis[x][y] = '*';
-                    i++;
+                    k++;
                     system("cls");
+                }
+
+
+                if (rbrod <= 0)
+                {
+                    cout << "Vi ste pobjedili :D";
+                    return 0;
+                    // BIN datoteka za check pobjede molim te napravi
                 }
 
             }
@@ -879,72 +940,983 @@ int main()
 
             }
 
-            Ppogodak.open("Ppogodak.txt", ios::out);
+            Ppogodak.open("Ppogodak.bin", ios::binary | ios::out);
             for (int i = 0; i < 11; i++)
                 for (int j = 0; j < 11; j++)
-                    Ppogodak << check[x][y] << " ";
+                    Ppogodak.write((char*)&check[i][j], sizeof(1));
             Ppogodak.close();
 
-            Ppotopljeno.open("Ppotopljeno.txt", ios::out);
-            Ppotopljeno << br2;
-            Ppotopljeno << " ";
-            Ppotopljeno << br3;
-            Ppotopljeno << " ";
-            Ppotopljeno << br4;
-            Ppotopljeno << " ";
-            Ppotopljeno << br5;
-            Ppotopljeno << " ";
-            Ppotopljeno << br6;
-            Ppotopljeno.close();
         }
 
 
 
 
         //robot turn
-        for (int i = 0; i == 0;)
+        for (int k = 0; k == 0;)
         {
-            x = rand() % 10 + 1;
-            y = rand() % 10 + 1;
-            if (rcheck[x][y] == 0)
+            if (counter == 0)
             {
-                rcheck[x][y] = 1;
-                if (player[x][y] != 0)
+                sm = 0;
+                x = rand() % 10 + 1;
+                y = rand() % 10 + 1;
+                if (rcheck[x][y] == 0)
                 {
-                    switch (player[x][y])
+                    rcheck[x][y] = 1;
+                    if (player[x][y] != 0)
                     {
-                    case 2:
-                        playervis[x][y] = 'X';
-                        rbr2++;
-                        break;
-                    case 3:
-                        playervis[x][y] = 'X';
-                        rbr3++;
-                        break;
-                    case 4:
-                        playervis[x][y] = 'X';
-                        rbr4++;
-                        break;
-                    case 5:
-                        playervis[x][y] = 'X';
-                        rbr5++;
-                        break;
-                    case 6:
-                        playervis[x][y] = 'X';
-                        rbr6++;
-                        break;
+                        switch (player[x][y])
+                        {
+                        case 2:
+                            playervis[x][y] = 'X';
+                            rbr2++;
+                            hit = 2;
+                            counter = 1;
+                            break;
+                        case 3:
+                            playervis[x][y] = 'X';
+                            rbr3++;
+                            hit = 3;
+                            counter = 2;
+                            break;
+                        case 4:
+                            playervis[x][y] = 'X';
+                            rbr4++;
+                            hit = 4;
+                            counter = 3;
+                            break;
+                        case 5:
+                            playervis[x][y] = 'X';
+                            rbr5++;
+                            hit = 5;
+                            counter = 1;
+                            break;
+                        case 6:
+                            playervis[x][y] = 'X';
+                            rbr6++;
+                            hit = 6;
+                            counter = 2;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        playervis[x][y] = '*';
+                        k++;
                     }
                 }
-                else
+            }
+            else
+            {
+                switch (hit)
                 {
-                    playervis[x][y] = '*';
-                    i++;
+                case 2:
+                    sm = rand() % 4 + 1;
+                    if (sm == 1 && x < 10)
+                    {
+                        if (rcheck[x + 1][y] == 0)
+                        {
+                            rcheck[x + 1][y] = 1;
+                            if (player[x + 1][y] != 0)
+                            {
+                                switch (player[x + 1][y])
+                                {
+                                case 2:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr2++;
+                                    counter--;
+                                    break;
+                                case 3:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 2 && x > 1)
+                    {
+                        if (rcheck[x - 1][y] == 0)
+                        {
+                            rcheck[x - 1][y] = 1;
+                            if (player[x - 1][y] != 0)
+                            {
+                                switch (player[x - 1][y])
+                                {
+                                case 2:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr2++;
+                                    counter--;
+                                    break;
+                                case 3:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 3 && y < 10)
+                    {
+                        if (rcheck[x][y + 1] == 0)
+                        {
+                            rcheck[x][y + 1] = 1;
+                            if (player[x][y + 1] != 0)
+                            {
+                                switch (player[x][y + 1])
+                                {
+                                case 2:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr2++;
+                                    counter--;
+                                    break;
+                                case 3:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y + 1] = '*';
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 4 && y > 1)
+                    {
+                        if (rcheck[x][y - 1] == 0)
+                        {
+                            rcheck[x][y - 1] = 1;
+                            if (player[x][y - 1] != 0)
+                            {
+                                switch (player[x][y - 1])
+                                {
+                                case 2:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr2++;
+                                    counter--;
+                                    break;
+                                case 3:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y - 1] = '*';
+                                k++;
+                            }
+                        }
+                    }; break;
+                case 3:
+                    if (sm == 0)
+                        sm = rand() % 4 + 1;
+                    if (sm == 1 && x < 9)
+                    {
+                        if (rcheck[x + 1][y] == 0)
+                        {
+                            rcheck[x + 1][y] = 1;
+                            if (player[x + 1][y] != 0)
+                            {
+                                switch (player[x + 1][y])
+                                {
+                                case 2:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr3++;
+                                    x = x + 1;
+                                    sm = 1;
+                                    counter--;
+                                    break;
+                                case 4:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                if (counter < 2)
+                                {
+                                    sm = 2; x = x - 1;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 2 && x > 2)
+                    {
+                        if (rcheck[x - 1][y] == 0)
+                        {
+                            rcheck[x - 1][y] = 1;
+                            if (player[x - 1][y] != 0)
+                            {
+                                switch (player[x - 1][y])
+                                {
+                                case 2:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr3++;
+                                    x = x - 1;
+                                    sm = 2;
+                                    counter--;
+                                    break;
+                                case 4:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                if (counter < 2)
+                                {
+                                    sm = 1; x = x + 1;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 3 && y < 9)
+                    {
+                        if (rcheck[x][y + 1] == 0)
+                        {
+                            rcheck[x][y + 1] = 1;
+                            if (player[x][y + 1] != 0)
+                            {
+                                switch (player[x][y + 1])
+                                {
+                                case 2:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr3++;
+                                    counter--;
+                                    y = y + 1;
+                                    sm = 3;
+                                    break;
+                                case 4:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y + 1] = '*';
+                                if (counter < 2)
+                                {
+                                    sm = 4; y = y - 1;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 4 && y > 2)
+                    {
+                        if (rcheck[x][y - 1] == 0)
+                        {
+                            rcheck[x][y - 1] = 1;
+                            if (player[x][y - 1] != 0)
+                            {
+                                switch (player[x][y - 1])
+                                {
+                                case 2:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr3++;
+                                    counter--;
+                                    y = y - 1; //playervis[x][  0 ]
+                                    sm = 4; //l
+                                    break;
+                                case 4:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y - 1] = '*';
+                                if (counter < 2)
+                                {
+                                    sm = 3; y = y - 1;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }; break;
+                case 4:
+                    sm = rand() % 4 + 1;
+                    if (sm == 1 && x < 9)
+                    {
+                        if (rcheck[x + 1][y] == 0)
+                        {
+                            rcheck[x + 1][y] = 1;
+                            if (player[x + 1][y] != 0)
+                            {
+                                switch (player[x + 1][y])
+                                {
+                                case 2:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr4++;
+                                    counter--;
+                                    x = x + 1;
+                                    sm = 1;
+                                    break;
+                                case 5:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                if (counter == 2)
+                                {
+                                    sm = 2; y = y + 1;
+                                }
+                                else if (counter == 1)
+                                {
+                                    sm = 2; y = y + 2;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 2 && x > 2)
+                    {
+                        if (rcheck[x - 1][y] == 0)
+                        {
+                            rcheck[x - 1][y] = 1;
+                            if (player[x - 1][y] != 0)
+                            {
+                                switch (player[x - 1][y])
+                                {
+                                case 2:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr4++;
+                                    x = x - 1;
+                                    sm = 2;
+                                    counter--;
+                                    break;
+                                case 5:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                if (counter == 2)
+                                {
+                                    sm = 1; x = x + 1;
+                                }
+                                else if (counter == 1)
+                                {
+                                    sm = 1; x = x + 2;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 3 && y < 9)
+                    {
+                        if (rcheck[x][y + 1] == 0)
+                        {
+                            rcheck[x][y + 1] = 1;
+                            if (player[x][y + 1] != 0)
+                            {
+                                switch (player[x][y + 1])
+                                {
+                                case 2:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr2++;
+                                    counter--;
+                                    break;
+                                case 3:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr4++;
+                                    y = y + 1;
+                                    sm = 3;
+                                    counter--;
+                                    break;
+                                case 5:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y + 1] = '*';
+                                if (counter == 2)
+                                {
+                                    sm = 4; y = y - 1;
+                                }
+                                else if (counter == 1)
+                                {
+                                    sm = 4; y = y - 2;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 4 && y > 2)
+                    {
+                        if (rcheck[x][y - 1] == 0)
+                        {
+                            rcheck[x][y - 1] = 1;
+                            if (player[x][y - 1] != 0)
+                            {
+                                switch (player[x][y - 1])
+                                {
+                                case 2:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr4++;
+                                    y = y - 1;
+                                    counter--;
+                                    break;
+                                case 5:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y - 1] = '*';
+                                if (counter == 2)
+                                {
+                                    sm = 3; y = y + 1;
+                                }
+                                else if (counter == 1)
+                                {
+                                    sm = 3; y = y + 2;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }; break;
+
+                case 5:
+                    sm = rand() % 4 + 1;
+                    if (sm == 1 && x < 9)
+                    {
+                        if (rcheck[x + 1][y] == 0)
+                        {
+                            rcheck[x + 1][y] = 1;
+                            if (player[x + 1][y] != 0)
+                            {
+                                switch (player[x + 1][y])
+                                {
+                                case 2:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr5++;
+                                    counter--;
+                                    break;
+                                case 6:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 2 && x > 2)
+                    {
+                        if (rcheck[x - 1][y] == 0)
+                        {
+                            rcheck[x - 1][y] = 1;
+                            if (player[x - 1][y] != 0)
+                            {
+                                switch (player[x - 1][y])
+                                {
+                                case 2:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr5++;
+                                    counter--;
+                                    break;
+                                case 6:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 3 && y < 9)
+                    {
+                        if (rcheck[x][y + 1] == 0)
+                        {
+                            rcheck[x][y + 1] = 1;
+                            if (player[x][y + 1] != 0)
+                            {
+                                switch (player[x][y + 1])
+                                {
+                                case 2:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr5++;
+                                    counter--;
+                                    break;
+                                case 6:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y + 1] = '*';
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 4 && y > 2)
+                    {
+                        if (rcheck[x][y - 1] == 0)
+                        {
+                            rcheck[x][y - 1] = 1;
+                            if (player[x][y - 1] != 0)
+                            {
+                                switch (player[x][y - 1])
+                                {
+                                case 2:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr5++;
+                                    counter--;
+                                    break;
+                                case 6:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr6++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y - 1] = '*';
+                                k++;
+                            }
+                        }
+                    }; break;
+                case 6:
+                    sm = rand() % 4 + 1;
+                    if (sm == 1 && x < 9)
+                    {
+                        if (rcheck[x + 1][y] == 0)
+                        {
+                            rcheck[x + 1][y] = 1;
+                            if (player[x + 1][y] != 0)
+                            {
+                                switch (player[x + 1][y])
+                                {
+                                case 2:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x + 1][y] = 'X';
+                                    rbr6++;
+                                    x = x + 1;
+                                    sm = 1;
+                                    counter--;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                if (counter < 2)
+                                {
+                                    sm = 2; x = x - 1;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 2 && x > 2)
+                    {
+                        if (rcheck[x - 1][y] == 0)
+                        {
+                            rcheck[x - 1][y] = 1;
+                            if (player[x - 1][y] != 0)
+                            {
+                                switch (player[x - 1][y])
+                                {
+                                case 2:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x - 1][y] = 'X';
+                                    rbr6++;
+                                    counter--;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y] = '*';
+                                if (counter < 2)
+                                {
+                                    sm = 1; x = x + 1;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 3 && y < 9)
+                    {
+                        if (rcheck[x][y + 1] == 0)
+                        {
+                            rcheck[x][y + 1] = 1;
+                            if (player[x][y + 1] != 0)
+                            {
+                                switch (player[x][y + 1])
+                                {
+                                case 2:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x][y + 1] = 'X';
+                                    rbr6++;
+                                    counter--;
+                                    y = y + 1;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y + 1] = '*';
+                                if (counter < 2)
+                                {
+                                    sm = 4; y = y - 1;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }
+                    if (sm == 4 && y > 2)
+                    {
+                        if (rcheck[x][y - 1] == 0)
+                        {
+                            rcheck[x][y - 1] = 1;
+                            if (player[x][y - 1] != 0)
+                            {
+                                switch (player[x][y - 1])
+                                {
+                                case 2:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr2++;
+                                    break;
+                                case 3:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr3++;
+                                    break;
+                                case 4:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr4++;
+                                    break;
+                                case 5:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr5++;
+                                    break;
+                                case 6:
+                                    playervis[x][y - 1] = 'X';
+                                    rbr6++;
+                                    counter--;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                playervis[x][y - 1] = '*';
+                                if (counter < 2)
+                                {
+                                    sm = 3; y = y + 1;
+                                }
+                                else
+                                    sm = 0;
+                                k++;
+                            }
+                        }
+                    }; break;
+
                 }
             }
-            Rpogodak.open("Rpogodak.txt", ios::out);
+
+
+            Rpogodak.open("Rpogodak.bin", ios::binary | ios::out);
             for (int i = 0; i < 11; i++)
                 for (int j = 0; j < 11; j++)
-                    Rpogodak << rcheck[i][j];
+                    Rpogodak.write((char*)&rcheck[i][j], sizeof(1));
             Rpogodak.close();
         }
 
