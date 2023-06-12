@@ -175,7 +175,7 @@ int main()
                             cout << "Zauzeto." << endl;
                     }
                     else
-                        cout << "Veæ ste izabrali ovaj brod." << endl;
+                        cout << "VeÃ¦ ste izabrali ovaj brod." << endl;
                     break;
                 case 3:
                     if (flagc == 0)
@@ -217,7 +217,7 @@ int main()
                             cout << "Zauzeto." << endl;
                     }
                     else
-                        cout << "Veæ ste izabrali ovaj brod." << endl;
+                        cout << "VeÃ¦ ste izabrali ovaj brod." << endl;
                     break;
                 case 2:
                     if (flagb == 0)
@@ -257,7 +257,7 @@ int main()
                             cout << "Zauzeto." << endl;
                     }
                     else
-                        cout << "Veæ ste izabrali ovaj brod." << endl;
+                        cout << "VeÃ¦ ste izabrali ovaj brod." << endl;
                     break;
                 default:
                     cout << "Nije ime broda." << endl;
@@ -293,7 +293,7 @@ int main()
                             cout << "Zauzeto." << endl;
                     }
                     else
-                        cout << "Veæ ste izabrali ovaj brod." << endl;
+                        cout << "VeÃ¦ ste izabrali ovaj brod." << endl;
                     break;
                 case 3:
                     if (flagc == 0)
@@ -337,7 +337,7 @@ int main()
                             cout << "Zauzeto." << endl;
                     }
                     else
-                        cout << "Veæ ste izabrali ovaj brod." << endl;
+                        cout << "VeÃ¦ ste izabrali ovaj brod." << endl;
                     break;
                 case 2:
                     if (flagb == 0)
@@ -377,7 +377,7 @@ int main()
                             cout << "Zauzeto." << endl;
                     }
                     else
-                        cout << "Veæ ste izabrali ovaj brod." << endl;
+                        cout << "VeÃ¦ ste izabrali ovaj brod." << endl;
                     break;
                 default:
                     cout << "Nije ime broda." << endl;
@@ -760,6 +760,7 @@ int main()
         for (int i = 0; i < 4; i++)
             robotMemory >> mjesto[i];
         robotMemory >> counter;
+        robotMemory >> sm;
         robotMemory.close();
             
 
@@ -953,7 +954,8 @@ int main()
                         case 2:
                             playervis[x][y] = 'X';
                             rbr2++;
-                            hit = 2;
+                                if(rbr2<2)
+                                  hit = 2;
                             counter = 1;
                             break;
                         case 3:
@@ -971,7 +973,8 @@ int main()
                         case 5:
                             playervis[x][y] = 'X';
                             rbr5++;
-                            hit = 5;
+                                if(rbr3<2)
+                                  hit = 5;
                             counter = 1;
                             break;
                         case 6:
