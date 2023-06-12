@@ -33,7 +33,7 @@ int main()
     //brojaci brodova
     int br2 = 0, br5 = 0, br3 = 0, br6 = 0, br4 = 0, rbr2 = 0, rbr3 = 0, rbr4 = 0, rbr5 = 0, rbr6 = 0;
     int ch = 0;   //koji brod?
-    int pk, pkr, hit = 0, counter = 0, smjer, sm;  //smjer -> 1 (okomito) , 2 (vodoravno)
+    int pk, pkr, hit = 0, counter = 0, smjer, sm, mjesto[4] = {0};  //smjer -> 1 (okomito) , 2 (vodoravno)
 
     char robovis[12][12];
     char playervis[12][12] = { 0 };
@@ -41,22 +41,13 @@ int main()
     // 4(*1),3/6(*2),2/5(*2) brodovi
     srand(time(0));
 
-    // strukturno polje za zapis usera,pobjeda i gubitka
-
-    //-> dodat ako se da
-
-    //struct info
-    //{
-    //  char user
-    //}
 
     //datoteke
     fstream playerBrod;
     fstream robotBrod;
+    fstream robotMemory;
     fstream Ppogodak; //BINARNO
-    fstream Rpogodak; //BINARNO
-
-    //fstream User;  
+    fstream Rpogodak; //BINARNO  
 
 
     cout << "Imena brodova su 4(zauzima 4 polja), 3(zauzima 3 polja), 2(zauzima 2 polje), dva puta     birate brodove 3 i 2." << endl;
@@ -762,24 +753,17 @@ int main()
                         playervis[i][j] = '*';
                     }
                 }
+
+
+        // ai za robota
+        robotMemory.open("Memory.txt", ios::in);
+        for (int i = 0; i < 4; i++)
+            robotMemory >> mjesto[i];
+        robotMemory >> counter;
+        robotMemory.close();
+            
+
     }
-
-
-    //if(option==1)
-    //{
-    //  Rpotopljeno.open("Rpotopljeno.txt", ios::in);
-    //  Ppotopljeno.open("Ppotopljeno.txt", ios::in);
-    //  Ppotopljeno>>br2;
-    //  Ppotopljeno>>br3;
-    //  Ppotopljeno>>br4;
-    //  Ppotopljeno>>br5;
-    //  Ppotopljeno>>br6;
-    //  Rpotopljeno>>rbr2;
-    //  Rpotopljeno>>rbr3;
-    //  Rpotopljeno>>rbr4;
-    //  Rpotopljeno.close();
-    //  Ppotopljeno.close();
-    //}
 
 
    //pocetni screen
@@ -1010,9 +994,10 @@ int main()
                 switch (hit)
                 {
                 case 2:
-                    sm = rand() % 4 + 1;
-                    if (sm == 1 && x < 10)
+                    
+                    if (sm == 1 && x < 10 && mjesto[0] == 0)
                     {
+                        mjesto[0] = 1;
                         if (rcheck[x + 1][y] == 0)
                         {
                             rcheck[x + 1][y] = 1;
@@ -1045,13 +1030,15 @@ int main()
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x + 1][y] = '*';
+                                sm++;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 2 && x > 1)
+                    if (sm == 2 && x > 1 && mjesto[1] == 0)
                     {
+                        mjesto[1] = 1;
                         if (rcheck[x - 1][y] == 0)
                         {
                             rcheck[x - 1][y] = 1;
@@ -1084,13 +1071,15 @@ int main()
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x - 1][y] = '*';
+                                sm++;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 3 && y < 10)
+                    if (sm == 3 && y < 10 && mjesto[2] == 0)
                     {
+                        mjesto[2] = 1;
                         if (rcheck[x][y + 1] == 0)
                         {
                             rcheck[x][y + 1] = 1;
@@ -1124,12 +1113,14 @@ int main()
                             else
                             {
                                 playervis[x][y + 1] = '*';
+                                sm++;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 4 && y > 1)
+                    if (sm == 4 && y > 1 && mjesto[3] == 0)
                     {
+                        mjesto[3] = 1;
                         if (rcheck[x][y - 1] == 0)
                         {
                             rcheck[x][y - 1] = 1;
@@ -1163,14 +1154,15 @@ int main()
                             else
                             {
                                 playervis[x][y - 1] = '*';
+                                sm++;
                                 k++;
                             }
                         }
-                    }; break;
+                    }
+                    else mjesto[sm - 1] = 1; break;
                 case 3:
-                    if (sm == 0)
-                        sm = rand() % 4 + 1;
-                    if (sm == 1 && x < 9)
+                    
+                    if (sm == 1 && x < 10 && mjesto[0] == 0)
                     {
                         if (rcheck[x + 1][y] == 0)
                         {
@@ -1182,6 +1174,8 @@ int main()
                                 case 2:
                                     playervis[x + 1][y] = 'X';
                                     rbr2++;
+                                   // mjesto[0] = 1;
+                                    sm++;
                                     break;
                                 case 3:
                                     playervis[x + 1][y] = 'X';
@@ -1193,32 +1187,40 @@ int main()
                                 case 4:
                                     playervis[x + 1][y] = 'X';
                                     rbr4++;
+                                    sm++;
+                                    //mjesto[0] = 1;
                                     break;
                                 case 5:
                                     playervis[x + 1][y] = 'X';
                                     rbr5++;
+                                    //mjesto[0] = 1;
+                                    sm++;
                                     break;
                                 case 6:
                                     playervis[x + 1][y] = 'X';
                                     rbr6++;
+                                    //mjesto[0] = 1;
+                                    sm++;
                                     break;
                                 }
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x + 1][y] = '*';
                                 if (counter < 2)
                                 {
                                     sm = 2; x = x - 1;
                                 }
                                 else
                                     sm = 0;
+                                mjesto[0] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 2 && x > 2)
+                    else if (sm == 2 && x > 1 && mjesto[1] == 0)
                     {
+                        
                         if (rcheck[x - 1][y] == 0)
                         {
                             rcheck[x - 1][y] = 1;
@@ -1229,6 +1231,7 @@ int main()
                                 case 2:
                                     playervis[x - 1][y] = 'X';
                                     rbr2++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 3:
                                     playervis[x - 1][y] = 'X';
@@ -1240,32 +1243,37 @@ int main()
                                 case 4:
                                     playervis[x - 1][y] = 'X';
                                     rbr4++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 5:
                                     playervis[x - 1][y] = 'X';
                                     rbr5++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 6:
                                     playervis[x - 1][y] = 'X';
                                     rbr6++;
+                                    mjesto[1] = 1;
                                     break;
                                 }
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x - 1][y] = '*';
                                 if (counter < 2)
                                 {
                                     sm = 1; x = x + 1;
                                 }
                                 else
                                     sm = 0;
+                                mjesto[1] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 3 && y < 9)
+                    else if (sm == 3 && y < 10 && mjesto[2] == 0)
                     {
+                        
                         if (rcheck[x][y + 1] == 0)
                         {
                             rcheck[x][y + 1] = 1;
@@ -1276,6 +1284,7 @@ int main()
                                 case 2:
                                     playervis[x][y + 1] = 'X';
                                     rbr2++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 3:
                                     playervis[x][y + 1] = 'X';
@@ -1287,14 +1296,17 @@ int main()
                                 case 4:
                                     playervis[x][y + 1] = 'X';
                                     rbr4++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 5:
                                     playervis[x][y + 1] = 'X';
                                     rbr5++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 6:
                                     playervis[x][y + 1] = 'X';
                                     rbr6++;
+                                    mjesto[2] = 1;
                                     break;
                                 }
                             }
@@ -1307,12 +1319,14 @@ int main()
                                 }
                                 else
                                     sm = 0;
+                                mjesto[2] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 4 && y > 2)
+                    else if (sm == 4 && y > 1 && mjesto[3] == 0)
                     {
+                        
                         if (rcheck[x][y - 1] == 0)
                         {
                             rcheck[x][y - 1] = 1;
@@ -1323,25 +1337,29 @@ int main()
                                 case 2:
                                     playervis[x][y - 1] = 'X';
                                     rbr2++;
+                                    mjesto[3] = 1;
                                     break;
                                 case 3:
                                     playervis[x][y - 1] = 'X';
                                     rbr3++;
                                     counter--;
-                                    y = y - 1; //playervis[x][  0 ]
-                                    sm = 4; //l
+                                    y = y - 1; 
+                                    sm = 4; 
                                     break;
                                 case 4:
                                     playervis[x][y - 1] = 'X';
                                     rbr4++;
+                                    mjesto[3] = 1;
                                     break;
                                 case 5:
                                     playervis[x][y - 1] = 'X';
                                     rbr5++;
+                                    mjesto[3] = 1;
                                     break;
                                 case 6:
                                     playervis[x][y - 1] = 'X';
                                     rbr6++;
+                                    mjesto[3] = 1;
                                     break;
                                 }
                             }
@@ -1354,13 +1372,15 @@ int main()
                                 }
                                 else
                                     sm = 0;
+                                mjesto[3] = 1;
                                 k++;
                             }
                         }
-                    }; break;
+                    }
+                    else mjesto[sm - 1] = 1; break;
                 case 4:
-                    sm = rand() % 4 + 1;
-                    if (sm == 1 && x < 9)
+                    sm++;
+                    if (sm == 1 && x < 10 && mjesto[0] == 0)
                     {
                         if (rcheck[x + 1][y] == 0)
                         {
@@ -1372,10 +1392,12 @@ int main()
                                 case 2:
                                     playervis[x + 1][y] = 'X';
                                     rbr2++;
+                                    mjesto[0] = 1;
                                     break;
                                 case 3:
                                     playervis[x + 1][y] = 'X';
                                     rbr3++;
+                                    mjesto[0] = 1;
                                     break;
                                 case 4:
                                     playervis[x + 1][y] = 'X';
@@ -1387,16 +1409,18 @@ int main()
                                 case 5:
                                     playervis[x + 1][y] = 'X';
                                     rbr5++;
+                                    mjesto[0] = 1;
                                     break;
                                 case 6:
                                     playervis[x + 1][y] = 'X';
                                     rbr6++;
+                                    mjesto[0] = 1;
                                     break;
                                 }
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x + 1][y] = '*';
                                 if (counter == 2)
                                 {
                                     sm = 2; y = y + 1;
@@ -1407,11 +1431,12 @@ int main()
                                 }
                                 else
                                     sm = 0;
+                                mjesto[0] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 2 && x > 2)
+                    else if (sm == 2 && x > 1 && mjesto[1] == 0)
                     {
                         if (rcheck[x - 1][y] == 0)
                         {
@@ -1423,10 +1448,12 @@ int main()
                                 case 2:
                                     playervis[x - 1][y] = 'X';
                                     rbr2++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 3:
                                     playervis[x - 1][y] = 'X';
                                     rbr3++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 4:
                                     playervis[x - 1][y] = 'X';
@@ -1438,16 +1465,18 @@ int main()
                                 case 5:
                                     playervis[x - 1][y] = 'X';
                                     rbr5++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 6:
                                     playervis[x - 1][y] = 'X';
                                     rbr6++;
+                                    mjesto[1] = 1;
                                     break;
                                 }
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x - 1][y] = '*';
                                 if (counter == 2)
                                 {
                                     sm = 1; x = x + 1;
@@ -1458,11 +1487,12 @@ int main()
                                 }
                                 else
                                     sm = 0;
+                                mjesto[1] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 3 && y < 9)
+                    else if (sm == 3 && y < 10 && mjesto[2] == 0)
                     {
                         if (rcheck[x][y + 1] == 0)
                         {
@@ -1474,11 +1504,12 @@ int main()
                                 case 2:
                                     playervis[x][y + 1] = 'X';
                                     rbr2++;
-                                    counter--;
+                                    mjesto[2] = 1;
                                     break;
                                 case 3:
                                     playervis[x][y + 1] = 'X';
                                     rbr3++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 4:
                                     playervis[x][y + 1] = 'X';
@@ -1490,10 +1521,12 @@ int main()
                                 case 5:
                                     playervis[x][y + 1] = 'X';
                                     rbr5++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 6:
                                     playervis[x][y + 1] = 'X';
                                     rbr6++;
+                                    mjesto[2] = 1;
                                     break;
                                 }
                             }
@@ -1510,12 +1543,14 @@ int main()
                                 }
                                 else
                                     sm = 0;
+                                mjesto[2] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 4 && y > 2)
+                    else if (sm == 4 && y > 1 && mjesto[3] == 0)
                     {
+                        
                         if (rcheck[x][y - 1] == 0)
                         {
                             rcheck[x][y - 1] = 1;
@@ -1526,10 +1561,12 @@ int main()
                                 case 2:
                                     playervis[x][y - 1] = 'X';
                                     rbr2++;
+                                    mjesto[3] = 1;
                                     break;
                                 case 3:
                                     playervis[x][y - 1] = 'X';
                                     rbr3++;
+                                    mjesto[3] = 1;
                                     break;
                                 case 4:
                                     playervis[x][y - 1] = 'X';
@@ -1540,10 +1577,12 @@ int main()
                                 case 5:
                                     playervis[x][y - 1] = 'X';
                                     rbr5++;
+                                    mjesto[3] = 1;
                                     break;
                                 case 6:
                                     playervis[x][y - 1] = 'X';
                                     rbr6++;
+                                    mjesto[3] = 1;
                                     break;
                                 }
                             }
@@ -1560,15 +1599,18 @@ int main()
                                 }
                                 else
                                     sm = 0;
+                                mjesto[3] = 1;
                                 k++;
                             }
                         }
-                    }; break;
+                    }
+                    else mjesto[sm - 1] = 1; break;
 
                 case 5:
-                    sm = rand() % 4 + 1;
-                    if (sm == 1 && x < 9)
+                    sm++;
+                    if (sm == 1 && x < 10 && mjesto[0] == 0)
                     {
+                        mjesto[0] = 1;
                         if (rcheck[x + 1][y] == 0)
                         {
                             rcheck[x + 1][y] = 1;
@@ -1601,13 +1643,14 @@ int main()
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x + 1][y] = '*';
                                 k++;
                             }
                         }
                     }
-                    if (sm == 2 && x > 2)
+                    else if (sm == 2 && x > 1 && mjesto[1] == 0)
                     {
+                        mjesto[1] = 1;
                         if (rcheck[x - 1][y] == 0)
                         {
                             rcheck[x - 1][y] = 1;
@@ -1640,13 +1683,14 @@ int main()
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x - 1][y] = '*';
                                 k++;
                             }
                         }
                     }
-                    if (sm == 3 && y < 9)
+                    else if (sm == 3 && y < 10 && mjesto[2] == 0)
                     {
+                        mjesto[2] = 1;
                         if (rcheck[x][y + 1] == 0)
                         {
                             rcheck[x][y + 1] = 1;
@@ -1684,8 +1728,9 @@ int main()
                             }
                         }
                     }
-                    if (sm == 4 && y > 2)
+                    else if (sm == 4 && y > 1 && mjesto[3] == 0)
                     {
+                        mjesto[3] = 1;
                         if (rcheck[x][y - 1] == 0)
                         {
                             rcheck[x][y - 1] = 1;
@@ -1722,10 +1767,11 @@ int main()
                                 k++;
                             }
                         }
-                    }; break;
+                    }
+                    else mjesto[sm - 1] = 1; break;
                 case 6:
-                    sm = rand() % 4 + 1;
-                    if (sm == 1 && x < 9)
+                    sm++;
+                    if (sm == 1 && x < 10 && mjesto[0] == 0)
                     {
                         if (rcheck[x + 1][y] == 0)
                         {
@@ -1737,18 +1783,22 @@ int main()
                                 case 2:
                                     playervis[x + 1][y] = 'X';
                                     rbr2++;
+                                    mjesto[0] = 1;
                                     break;
                                 case 3:
                                     playervis[x + 1][y] = 'X';
                                     rbr3++;
+                                    mjesto[0] = 1;
                                     break;
                                 case 4:
                                     playervis[x + 1][y] = 'X';
                                     rbr4++;
+                                    mjesto[0] = 1;
                                     break;
                                 case 5:
                                     playervis[x + 1][y] = 'X';
                                     rbr5++;
+                                    mjesto[0] = 1;
                                     break;
                                 case 6:
                                     playervis[x + 1][y] = 'X';
@@ -1761,19 +1811,21 @@ int main()
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x + 1][y] = '*';
                                 if (counter < 2)
                                 {
                                     sm = 2; x = x - 1;
                                 }
                                 else
                                     sm = 0;
+                                mjesto[0] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 2 && x > 2)
+                    else if (sm == 2 && x > 1 && mjesto[1] == 0)
                     {
+                        
                         if (rcheck[x - 1][y] == 0)
                         {
                             rcheck[x - 1][y] = 1;
@@ -1784,18 +1836,22 @@ int main()
                                 case 2:
                                     playervis[x - 1][y] = 'X';
                                     rbr2++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 3:
                                     playervis[x - 1][y] = 'X';
                                     rbr3++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 4:
                                     playervis[x - 1][y] = 'X';
                                     rbr4++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 5:
                                     playervis[x - 1][y] = 'X';
                                     rbr5++;
+                                    mjesto[1] = 1;
                                     break;
                                 case 6:
                                     playervis[x - 1][y] = 'X';
@@ -1806,19 +1862,21 @@ int main()
                             }
                             else
                             {
-                                playervis[x][y] = '*';
+                                playervis[x - 1][y] = '*';
                                 if (counter < 2)
                                 {
                                     sm = 1; x = x + 1;
                                 }
                                 else
                                     sm = 0;
+                                mjesto[1] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 3 && y < 9)
+                    else if (sm == 3 && y < 10 && mjesto[2] == 0)
                     {
+                        
                         if (rcheck[x][y + 1] == 0)
                         {
                             rcheck[x][y + 1] = 1;
@@ -1829,18 +1887,22 @@ int main()
                                 case 2:
                                     playervis[x][y + 1] = 'X';
                                     rbr2++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 3:
                                     playervis[x][y + 1] = 'X';
                                     rbr3++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 4:
                                     playervis[x][y + 1] = 'X';
                                     rbr4++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 5:
                                     playervis[x][y + 1] = 'X';
                                     rbr5++;
+                                    mjesto[2] = 1;
                                     break;
                                 case 6:
                                     playervis[x][y + 1] = 'X';
@@ -1859,12 +1921,14 @@ int main()
                                 }
                                 else
                                     sm = 0;
+                                mjesto[2] = 1;
                                 k++;
                             }
                         }
                     }
-                    if (sm == 4 && y > 2)
+                    else if (sm == 4 && y > 1 && mjesto[3] == 0)
                     {
+                        mjesto[3] = 1;
                         if (rcheck[x][y - 1] == 0)
                         {
                             rcheck[x][y - 1] = 1;
@@ -1907,7 +1971,9 @@ int main()
                                 k++;
                             }
                         }
-                    }; break;
+                    }
+                    else mjesto[sm - 1] = 1; break;
+                
 
                 }
             }
@@ -1918,6 +1984,12 @@ int main()
                 for (int j = 0; j < 11; j++)
                     Rpogodak.write((char*)&rcheck[i][j], sizeof(1));
             Rpogodak.close();
+
+            robotMemory.open("Memory.txt", ios::out);
+            for (int i = 0; i < 4; i++)
+                robotMemory << mjesto[i];
+            robotMemory << counter;
+            robotMemory.close();
         }
 
 
