@@ -939,8 +939,8 @@ int main()
         //robot turn
         for (int k = 0; k == 0;)
         {
-            if (counter == 0)
-            {
+            //if (counter == 0)
+            //{
                 sm = 0;
                 x = rand() % 10 + 1;
                 y = rand() % 10 + 1;
@@ -954,34 +954,47 @@ int main()
                         case 2:
                             playervis[x][y] = 'X';
                             rbr2++;
-                                if(rbr2<2)
-                                  hit = 2;
-                            counter = 1;
+                            if (rbr2 < 2)
+                            {
+                                hit = 2;
+                                counter = 1;
+                            }
                             break;
                         case 3:
                             playervis[x][y] = 'X';
                             rbr3++;
-                            hit = 3;
-                            counter = 2;
+                            if (rbr3 < 3)
+                            {
+                                hit = 3;
+                                counter = 3-rbr3;
+                            }
                             break;
                         case 4:
                             playervis[x][y] = 'X';
                             rbr4++;
-                            hit = 4;
-                            counter = 3;
+                            if (rbr4 < 4)
+                            {
+                                hit = 4;
+                                counter = 4-rbr4;
+                            }
                             break;
                         case 5:
                             playervis[x][y] = 'X';
                             rbr5++;
-                                if(rbr3<2)
-                                  hit = 5;
-                            counter = 1;
+                            if (rbr5 < 2)
+                            {
+                                hit = 5;
+                                counter = 2 -rbr5;
+                            }
                             break;
                         case 6:
                             playervis[x][y] = 'X';
                             rbr6++;
-                            hit = 6;
-                            counter = 2;
+                            if (rbr6 < 3)
+                            {
+                                hit = 6;
+                                counter = 3 - rbr6;
+                            }
                             break;
                         }
                     }
@@ -991,8 +1004,8 @@ int main()
                         k++;
                     }
                 }
-            }
-            else
+            //}
+/*else
             {
                 switch (hit)
                 {
@@ -1039,7 +1052,7 @@ int main()
                             }
                         }
                     }
-                    if (sm == 2 && x > 1 && mjesto[1] == 0)
+                    else if (sm == 2 && x > 1 && mjesto[1] == 0)
                     {
                         mjesto[1] = 1;
                         if (rcheck[x - 1][y] == 0)
@@ -1080,7 +1093,7 @@ int main()
                             }
                         }
                     }
-                    if (sm == 3 && y < 10 && mjesto[2] == 0)
+                    else if (sm == 3 && y < 10 && mjesto[2] == 0)
                     {
                         mjesto[2] = 1;
                         if (rcheck[x][y + 1] == 0)
@@ -1121,7 +1134,7 @@ int main()
                             }
                         }
                     }
-                    if (sm == 4 && y > 1 && mjesto[3] == 0)
+                    else if (sm == 4 && y > 1 && mjesto[3] == 0)
                     {
                         mjesto[3] = 1;
                         if (rcheck[x][y - 1] == 0)
@@ -1177,7 +1190,7 @@ int main()
                                 case 2:
                                     playervis[x + 1][y] = 'X';
                                     rbr2++;
-                                   // mjesto[0] = 1;
+                                    mjesto[0] = 1;
                                     sm++;
                                     break;
                                 case 3:
@@ -1191,18 +1204,18 @@ int main()
                                     playervis[x + 1][y] = 'X';
                                     rbr4++;
                                     sm++;
-                                    //mjesto[0] = 1;
+                                    mjesto[0] = 1;
                                     break;
                                 case 5:
                                     playervis[x + 1][y] = 'X';
                                     rbr5++;
-                                    //mjesto[0] = 1;
+                                    mjesto[0] = 1;
                                     sm++;
                                     break;
                                 case 6:
                                     playervis[x + 1][y] = 'X';
                                     rbr6++;
-                                    //mjesto[0] = 1;
+                                    mjesto[0] = 1;
                                     sm++;
                                     break;
                                 }
@@ -1234,6 +1247,7 @@ int main()
                                 case 2:
                                     playervis[x - 1][y] = 'X';
                                     rbr2++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 3:
@@ -1246,16 +1260,19 @@ int main()
                                 case 4:
                                     playervis[x - 1][y] = 'X';
                                     rbr4++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 5:
                                     playervis[x - 1][y] = 'X';
                                     rbr5++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 6:
                                     playervis[x - 1][y] = 'X';
                                     rbr6++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 }
@@ -1287,6 +1304,7 @@ int main()
                                 case 2:
                                     playervis[x][y + 1] = 'X';
                                     rbr2++;
+                                    sm++;
                                     mjesto[2] = 1;
                                     break;
                                 case 3:
@@ -1299,16 +1317,19 @@ int main()
                                 case 4:
                                     playervis[x][y + 1] = 'X';
                                     rbr4++;
+                                    sm++;
                                     mjesto[2] = 1;
                                     break;
                                 case 5:
                                     playervis[x][y + 1] = 'X';
                                     rbr5++;
+                                    sm++;
                                     mjesto[2] = 1;
                                     break;
                                 case 6:
                                     playervis[x][y + 1] = 'X';
                                     rbr6++;
+                                    sm++;
                                     mjesto[2] = 1;
                                     break;
                                 }
@@ -1340,6 +1361,7 @@ int main()
                                 case 2:
                                     playervis[x][y - 1] = 'X';
                                     rbr2++;
+                                    sm--;
                                     mjesto[3] = 1;
                                     break;
                                 case 3:
@@ -1353,16 +1375,19 @@ int main()
                                     playervis[x][y - 1] = 'X';
                                     rbr4++;
                                     mjesto[3] = 1;
+                                    sm--;
                                     break;
                                 case 5:
                                     playervis[x][y - 1] = 'X';
                                     rbr5++;
                                     mjesto[3] = 1;
+                                    sm--;
                                     break;
                                 case 6:
                                     playervis[x][y - 1] = 'X';
                                     rbr6++;
                                     mjesto[3] = 1;
+                                    sm--;
                                     break;
                                 }
                             }
@@ -1395,12 +1420,14 @@ int main()
                                 case 2:
                                     playervis[x + 1][y] = 'X';
                                     rbr2++;
+                                    sm++;
                                     mjesto[0] = 1;
                                     break;
                                 case 3:
                                     playervis[x + 1][y] = 'X';
                                     rbr3++;
                                     mjesto[0] = 1;
+                                    sm++;
                                     break;
                                 case 4:
                                     playervis[x + 1][y] = 'X';
@@ -1413,11 +1440,13 @@ int main()
                                     playervis[x + 1][y] = 'X';
                                     rbr5++;
                                     mjesto[0] = 1;
+                                    sm++;
                                     break;
                                 case 6:
                                     playervis[x + 1][y] = 'X';
                                     rbr6++;
                                     mjesto[0] = 1;
+                                    sm++;
                                     break;
                                 }
                             }
@@ -1451,11 +1480,13 @@ int main()
                                 case 2:
                                     playervis[x - 1][y] = 'X';
                                     rbr2++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 3:
                                     playervis[x - 1][y] = 'X';
                                     rbr3++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 4:
@@ -1469,10 +1500,12 @@ int main()
                                     playervis[x - 1][y] = 'X';
                                     rbr5++;
                                     mjesto[1] = 1;
+                                    sm++;
                                     break;
                                 case 6:
                                     playervis[x - 1][y] = 'X';
                                     rbr6++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 }
@@ -1508,11 +1541,13 @@ int main()
                                     playervis[x][y + 1] = 'X';
                                     rbr2++;
                                     mjesto[2] = 1;
+                                    sm++;
                                     break;
                                 case 3:
                                     playervis[x][y + 1] = 'X';
                                     rbr3++;
                                     mjesto[2] = 1;
+                                    sm++;
                                     break;
                                 case 4:
                                     playervis[x][y + 1] = 'X';
@@ -1525,11 +1560,13 @@ int main()
                                     playervis[x][y + 1] = 'X';
                                     rbr5++;
                                     mjesto[2] = 1;
+                                    sm++;
                                     break;
                                 case 6:
                                     playervis[x][y + 1] = 'X';
                                     rbr6++;
                                     mjesto[2] = 1;
+                                    sm++;
                                     break;
                                 }
                             }
@@ -1565,10 +1602,12 @@ int main()
                                     playervis[x][y - 1] = 'X';
                                     rbr2++;
                                     mjesto[3] = 1;
+                                    sm--;
                                     break;
                                 case 3:
                                     playervis[x][y - 1] = 'X';
                                     rbr3++;
+                                    sm--;
                                     mjesto[3] = 1;
                                     break;
                                 case 4:
@@ -1581,11 +1620,12 @@ int main()
                                     playervis[x][y - 1] = 'X';
                                     rbr5++;
                                     mjesto[3] = 1;
-                                    break;
+                                    sm--;                                    break;
                                 case 6:
                                     playervis[x][y - 1] = 'X';
                                     rbr6++;
                                     mjesto[3] = 1;
+                                    sm--;
                                     break;
                                 }
                             }
@@ -1624,14 +1664,17 @@ int main()
                                 case 2:
                                     playervis[x + 1][y] = 'X';
                                     rbr2++;
+                                    sm++;
                                     break;
                                 case 3:
                                     playervis[x + 1][y] = 'X';
                                     rbr3++;
+                                    sm++;
                                     break;
                                 case 4:
                                     playervis[x + 1][y] = 'X';
                                     rbr4++;
+                                    sm++;
                                     break;
                                 case 5:
                                     playervis[x + 1][y] = 'X';
@@ -1641,6 +1684,7 @@ int main()
                                 case 6:
                                     playervis[x + 1][y] = 'X';
                                     rbr6++;
+                                    sm++;
                                     break;
                                 }
                             }
@@ -1664,14 +1708,17 @@ int main()
                                 case 2:
                                     playervis[x - 1][y] = 'X';
                                     rbr2++;
+                                    sm++;
                                     break;
                                 case 3:
                                     playervis[x - 1][y] = 'X';
                                     rbr3++;
+                                    sm++;
                                     break;
                                 case 4:
                                     playervis[x - 1][y] = 'X';
                                     rbr4++;
+                                    sm++;
                                     break;
                                 case 5:
                                     playervis[x - 1][y] = 'X';
@@ -1681,6 +1728,7 @@ int main()
                                 case 6:
                                     playervis[x - 1][y] = 'X';
                                     rbr6++;
+                                    sm++;
                                     break;
                                 }
                             }
@@ -1704,14 +1752,17 @@ int main()
                                 case 2:
                                     playervis[x][y + 1] = 'X';
                                     rbr2++;
+                                    sm++;
                                     break;
                                 case 3:
                                     playervis[x][y + 1] = 'X';
                                     rbr3++;
+                                    sm++;
                                     break;
                                 case 4:
                                     playervis[x][y + 1] = 'X';
                                     rbr4++;
+                                    sm++;
                                     break;
                                 case 5:
                                     playervis[x][y + 1] = 'X';
@@ -1721,6 +1772,7 @@ int main()
                                 case 6:
                                     playervis[x][y + 1] = 'X';
                                     rbr6++;
+                                    sm++;
                                     break;
                                 }
                             }
@@ -1744,14 +1796,17 @@ int main()
                                 case 2:
                                     playervis[x][y - 1] = 'X';
                                     rbr2++;
+                                    sm++;
                                     break;
                                 case 3:
                                     playervis[x][y - 1] = 'X';
                                     rbr3++;
+                                    sm++;
                                     break;
                                 case 4:
                                     playervis[x][y - 1] = 'X';
                                     rbr4++;
+                                    sm++;
                                     break;
                                 case 5:
                                     playervis[x][y - 1] = 'X';
@@ -1761,6 +1816,7 @@ int main()
                                 case 6:
                                     playervis[x][y - 1] = 'X';
                                     rbr6++;
+                                    sm++;
                                     break;
                                 }
                             }
@@ -1773,7 +1829,6 @@ int main()
                     }
                     else mjesto[sm - 1] = 1; break;
                 case 6:
-                    sm++;
                     if (sm == 1 && x < 10 && mjesto[0] == 0)
                     {
                         if (rcheck[x + 1][y] == 0)
@@ -1787,20 +1842,24 @@ int main()
                                     playervis[x + 1][y] = 'X';
                                     rbr2++;
                                     mjesto[0] = 1;
+                                    sm++;
                                     break;
                                 case 3:
                                     playervis[x + 1][y] = 'X';
                                     rbr3++;
+                                    sm++;
                                     mjesto[0] = 1;
                                     break;
                                 case 4:
                                     playervis[x + 1][y] = 'X';
                                     rbr4++;
+                                    sm++;
                                     mjesto[0] = 1;
                                     break;
                                 case 5:
                                     playervis[x + 1][y] = 'X';
                                     rbr5++;
+                                    sm++;
                                     mjesto[0] = 1;
                                     break;
                                 case 6:
@@ -1839,21 +1898,25 @@ int main()
                                 case 2:
                                     playervis[x - 1][y] = 'X';
                                     rbr2++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 3:
                                     playervis[x - 1][y] = 'X';
                                     rbr3++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 4:
                                     playervis[x - 1][y] = 'X';
                                     rbr4++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 5:
                                     playervis[x - 1][y] = 'X';
                                     rbr5++;
+                                    sm++;
                                     mjesto[1] = 1;
                                     break;
                                 case 6:
@@ -1890,26 +1953,31 @@ int main()
                                 case 2:
                                     playervis[x][y + 1] = 'X';
                                     rbr2++;
+                                    sm++;
                                     mjesto[2] = 1;
                                     break;
                                 case 3:
                                     playervis[x][y + 1] = 'X';
                                     rbr3++;
+                                    sm++;
                                     mjesto[2] = 1;
                                     break;
                                 case 4:
                                     playervis[x][y + 1] = 'X';
                                     rbr4++;
+                                    sm++;
                                     mjesto[2] = 1;
                                     break;
                                 case 5:
                                     playervis[x][y + 1] = 'X';
                                     rbr5++;
+                                    sm++;
                                     mjesto[2] = 1;
                                     break;
                                 case 6:
                                     playervis[x][y + 1] = 'X';
                                     rbr6++;
+                                    sm++;
                                     counter--;
                                     y = y + 1;
                                     break;
@@ -1942,18 +2010,22 @@ int main()
                                 case 2:
                                     playervis[x][y - 1] = 'X';
                                     rbr2++;
+                                    sm--;
                                     break;
                                 case 3:
                                     playervis[x][y - 1] = 'X';
                                     rbr3++;
+                                    sm--;
                                     break;
                                 case 4:
                                     playervis[x][y - 1] = 'X';
                                     rbr4++;
+                                    sm--;
                                     break;
                                 case 5:
                                     playervis[x][y - 1] = 'X';
                                     rbr5++;
+                                    sm--;
                                     break;
                                 case 6:
                                     playervis[x][y - 1] = 'X';
@@ -1979,7 +2051,7 @@ int main()
                 
 
                 }
-            }
+            }*/
 
 
             Rpogodak.open("Rpogodak.bin", ios::binary | ios::out);
@@ -1988,11 +2060,11 @@ int main()
                     Rpogodak.write((char*)&rcheck[i][j], sizeof(1));
             Rpogodak.close();
 
-            robotMemory.open("Memory.txt", ios::out);
+            /*robotMemory.open("Memory.txt", ios::out);
             for (int i = 0; i < 4; i++)
                 robotMemory << mjesto[i];
             robotMemory << counter;
-            robotMemory.close();
+            robotMemory.close();*/
         }
 
 
