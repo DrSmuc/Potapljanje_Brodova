@@ -33,7 +33,7 @@ int main()
     //brojaci brodova
     int br2 = 0, br5 = 0, br3 = 0, br6 = 0, br4 = 0, rbr2 = 0, rbr3 = 0, rbr4 = 0, rbr5 = 0, rbr6 = 0;
     int ch = 0;   //koji brod?
-    int pk, pkr, hit = 0, counter = 0, smjer, sm, mjesto[4] = {0};  //smjer -> 1 (okomito) , 2 (vodoravno)
+    int pk, pkr, hit = 0, counter = 0, smjer, sm, mjesto[4] = { 0 }, potez[2] = { 0 };  //smjer -> 1 (okomito) , 2 (vodoravno)
 
     char robovis[12][12];
     char playervis[12][12] = { 0 };
@@ -803,7 +803,7 @@ int main()
                 }
                 cout << endl;
             }
-            cout << "\n-\n\n";
+            cout << "\n-  Robotov zadnji potez : "<<potez[0]<<","<<potez[1] << "\n\n";
             //player
             cout << " ";
             for (int i = 0; i < 11; i++)
@@ -944,6 +944,8 @@ int main()
                 sm = 0;
                 x = rand() % 10 + 1;
                 y = rand() % 10 + 1;
+                potez[0] = x;
+                potez[1] = y;
                 if (rcheck[x][y] == 0)
                 {
                     rcheck[x][y] = 1;
